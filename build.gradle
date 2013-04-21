@@ -1,0 +1,33 @@
+def neo4jVersion = "1.9.M04"
+def junitVersion = "4.8.2"
+apply plugin: 'java'
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+repositories {
+   mavenCentral()
+}
+dependencies {
+   compile files('lib/classes.jar')
+   compile "org.neo4j:neo4j:${neo4jVersion}"
+   compile group: 'org.neo4j', name: 'neo4j-kernel', version: '${neo4jVersion}', classifier:'tests'
+   compile "junit:junit:${junitVersion}"
+  
+}
+
+
+jar{
+ metaInf {
+		from 'src/main/META-INF'
+	}
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main'
+		}
+
+	}
+}

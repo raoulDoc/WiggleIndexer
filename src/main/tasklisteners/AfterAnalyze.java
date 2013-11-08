@@ -4,6 +4,7 @@ package tasklisteners;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 
+import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import visitors.WiggleVisitor;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -15,12 +16,14 @@ import java.util.Map;
 
 public class AfterAnalyze implements TaskListener{
 
-	private final WiggleVisitor visitor; 
-	private final GraphDatabaseService graphDb;
+    private final JavacTask task;
+	private final GraphDatabaseBuilder graphDbBuilder;
+    private final Map<String, String> cuProps;
 
-	public AfterAnalyze(JavacTask task, GraphDatabaseService graphDb, Map<String, String> cuProps) {
-		this.visitor = new WiggleVisitor(task, graphDb, cuProps);
-		this.graphDb = graphDb;
+	public AfterAnalyze(JavacTask task, GraphDatabaseBuilder graphDbBuilder, Map<String, String> cuProps) {
+		this.graphDbBuilder = graphDbBuilder;
+        this.task = task;
+        this.cuProps = cuProps;
 	}
 
 	@Override
@@ -28,8 +31,10 @@ public class AfterAnalyze implements TaskListener{
 
 		if(arg0.getKind().toString().equals("ANALYZE"))
 		{
-				CompilationUnitTree u = arg0.getCompilationUnit();
-				visitor.scan(u, null);
+			CompilationUnitTree u = arg0.getCompilationUnit();
+            GraphDatabaseService graphDb = graphDbBuilder.newGraphDatabase();
+            new WiggleVisitor(task, graphDb, cuProps).scan(u, null);
+            graphDb.shutdown();
 		}
 	}
 

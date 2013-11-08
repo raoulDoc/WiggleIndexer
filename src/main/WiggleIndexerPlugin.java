@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseBuilder;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.kernel.impl.util.FileUtils;
@@ -17,7 +18,7 @@ import com.sun.source.util.JavacTask;
 public class WiggleIndexerPlugin implements com.sun.source.util.Plugin{
 
 	private static final String PLUGIN_NAME = "WiggleIndexerPlugin";
-	private GraphDatabaseService graphDb;
+	private GraphDatabaseBuilder graphDbBuilder;
 	
 	private String wiggleDbPath;
 	private String wiggleClearDb;
@@ -42,7 +43,7 @@ public class WiggleIndexerPlugin implements com.sun.source.util.Plugin{
 		System.out.println("WIGGLE_CLEAR_DB:" + wiggleClearDb);
 		
         cuProps.put("projectName", projectName);
-		task.setTaskListener(new AfterAnalyze(task, graphDb, cuProps));
+		task.setTaskListener(new AfterAnalyze(task, graphDbBuilder, cuProps));
 		System.out.println("finished");
 
 	}
@@ -95,12 +96,11 @@ public class WiggleIndexerPlugin implements com.sun.source.util.Plugin{
 		}
 
 		
-		graphDb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( wiggleDbPath ).
+		graphDbBuilder = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder( wiggleDbPath ).
 				setConfig( GraphDatabaseSettings.node_keys_indexable, "nodeType" ).
 				setConfig( GraphDatabaseSettings.relationship_keys_indexable, "typeKind" ).
 				setConfig( GraphDatabaseSettings.node_auto_indexing, "true" ).
-				setConfig( GraphDatabaseSettings.relationship_auto_indexing, "true" ).
-				newGraphDatabase();
+				setConfig( GraphDatabaseSettings.relationship_auto_indexing, "true" );
 
 		//registerShutdownHook( graphDb );
 

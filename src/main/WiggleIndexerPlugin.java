@@ -21,7 +21,7 @@ public class WiggleIndexerPlugin implements com.sun.source.util.Plugin{
 	private String wiggleClearDb;
 
 	@Override
-	public void call(JavacTask task, String[] args) {
+	public void init(JavacTask task, String[] args) {
 
 		createDb();
 		String projectName = getProjectName();

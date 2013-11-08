@@ -34,7 +34,7 @@ public class WiggleVisitor extends TreePathScanner<Void, Pair<Tree, RelationType
 	private final Types types; 
 	private final GraphDatabaseService graphDb;
 	private CompilationUnitTree currCompUnit;
-	private final String projectName;
+	private final Map<String, String> cuProps;
 
 
 	private final Map<Tree, Node> treeToNodeCache = new HashMap<>();
@@ -42,12 +42,12 @@ public class WiggleVisitor extends TreePathScanner<Void, Pair<Tree, RelationType
 	private Map<String, Node> classTypeCache = new HashMap<>();
 	private Map<String, Node> methodTypeCache = new HashMap<>();
 
-	public WiggleVisitor(JavacTask task, GraphDatabaseService graphDb, String projectName) {
+	public WiggleVisitor(JavacTask task, GraphDatabaseService graphDb, Map<String, String> cuProps) {
 		this.types = task.getTypes();
 		this.trees = Trees.instance(task);
 		this.sourcePositions = trees.getSourcePositions();
 		this.graphDb = graphDb;
-		this.projectName = projectName;
+		this.cuProps = cuProps;
 	}
 	
 	@Override
@@ -68,7 +68,10 @@ public class WiggleVisitor extends TreePathScanner<Void, Pair<Tree, RelationType
 		{
 
 			compilationUnitNode = createSkeletonNode(compilationUnitTree);
-			compilationUnitNode.setProperty("projectName", projectName);
+            for (Map.Entry<String, String> prop : cuProps.entrySet())
+            {
+			    compilationUnitNode.setProperty(prop.getKey(), prop.getValue());
+            }
 
 			String fileName = compilationUnitTree.getSourceFile().toUri().toString();
 			compilationUnitNode.setProperty("fileName", fileName);

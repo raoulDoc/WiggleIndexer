@@ -11,13 +11,15 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskListener;
 
+import java.util.Map;
+
 public class AfterAnalyze implements TaskListener{
 
 	private final WiggleVisitor visitor; 
 	private final GraphDatabaseService graphDb;
 
-	public AfterAnalyze(JavacTask task, GraphDatabaseService graphDb, String projectName) {
-		this.visitor = new WiggleVisitor(task, graphDb, projectName);
+	public AfterAnalyze(JavacTask task, GraphDatabaseService graphDb, Map<String, String> cuProps) {
+		this.visitor = new WiggleVisitor(task, graphDb, cuProps);
 		this.graphDb = graphDb;
 	}
 

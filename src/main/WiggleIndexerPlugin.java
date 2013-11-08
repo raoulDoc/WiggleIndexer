@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
@@ -24,20 +26,48 @@ public class WiggleIndexerPlugin implements com.sun.source.util.Plugin{
 	public void init(JavacTask task, String[] args) {
 
 		createDb();
-		String projectName = getProjectName();
+        Map<String, String> env = System.getenv();
+        Map<String, String> cuProps = new HashMap<>();
+        for (Map.Entry<String, String> e : env)
+        {
+            if (e.getKey().startsWith("WIGGLE_CUPROP_"))
+            {
+                cuProps.put(underToCamel(e.getKey().substring("WIGGLE_CUPROP_".length())), e.getValue());
+            }
+        }
+        String projectName = getProjectName();
 		System.out.println("Running " + PLUGIN_NAME);
 		System.out.println("WIGGLE_PROJECT_NAME:" + projectName);
 		System.out.println("WIGGLE_DB_PATH:" + wiggleDbPath);
 		System.out.println("WIGGLE_CLEAR_DB:" + wiggleClearDb);
 		
-
-		task.setTaskListener(new AfterAnalyze(task, graphDb, projectName));
+        cuProps.put("projectName", projectName);
+		task.setTaskListener(new AfterAnalyze(task, graphDb, cuProps));
 		System.out.println("finished");
 
 	}
 
+    // Turn SOME_CAMEL_IDENT into someCamelIdent.  A trailing underscore is left intact
+    private static String underToCamel(String s)
+    {
+        String r = "";
+        for (int i = 0; i < s.length(); i++)
+        {
+            if (s.charAt(i) == '_' && i + 1 < s.length())
+            {
+                r += Character.toUpperCase(s.charAt(i + 1)); // Upper case following char
+                i += 1; // Skip next char now we've dealt with it
+            }
+            else
+            {
+                r += s.charAt(i);
+            }
+        }
+        return r;
+    }
 
-	private String getProjectName() {
+
+    private String getProjectName() {
 		String projectName = System.getenv("WIGGLE_PROJECT_NAME");
 		if(projectName == null)
 			projectName = "NO_NAME";

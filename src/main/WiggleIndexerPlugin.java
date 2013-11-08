@@ -61,7 +61,7 @@ public class WiggleIndexerPlugin implements com.sun.source.util.Plugin{
             }
             else
             {
-                r += s.charAt(i);
+                r += Character.toLowerCase(s.charAt(i));
             }
         }
         return r;

@@ -28,7 +28,7 @@ public class WiggleIndexerPlugin implements com.sun.source.util.Plugin{
 		createDb();
         Map<String, String> env = System.getenv();
         Map<String, String> cuProps = new HashMap<>();
-        for (Map.Entry<String, String> e : env)
+        for (Map.Entry<String, String> e : env.entrySet())
         {
             if (e.getKey().startsWith("WIGGLE_CUPROP_"))
             {

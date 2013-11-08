@@ -1,6 +1,6 @@
 package tests;
 
-
+import java.util.Collections;
 import java.util.List;
 
 
@@ -50,7 +50,7 @@ public class TypeHierarchyTest {
 
 		CompilationUnitTree u = parse.get(0);
 		
-		WiggleVisitor v = new WiggleVisitor(task, graphDb, "Test_Extends");
+		WiggleVisitor v = new WiggleVisitor(task, graphDb, Collections.singletonMap("projectName", "Test_Extends"));
 		v.scan(u, null);
 
 		ExecutionEngine engine = new ExecutionEngine(graphDb, new BufferingLogger());
@@ -82,7 +82,7 @@ public class TypeHierarchyTest {
 		CompilationUnitTree u1 = parse.get(0);
 		CompilationUnitTree u2 = parse.get(1);
 		
-		WiggleVisitor v = new WiggleVisitor(task, graphDb, "Test_Extends");
+		WiggleVisitor v = new WiggleVisitor(task, graphDb, Collections.singletonMap("projectName", "Test_Extends"));
 		v.scan(u1, null);
 		v.scan(u2, null);
 

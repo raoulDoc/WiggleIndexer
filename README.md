@@ -3,22 +3,21 @@ BUILD INSTRUCTIONS
 
 Requirements: gradle 1.2 installed
 
-1) Download and build a version of javac supporting plugins
-2) copy the generated lib/classes.jar in ./WiggleIndexer/lib. It should be exactly at ./WiggleIndexer/lib/classes.jar
-3) gradle build in ./WiggleIndexer
-4) generated jar is available at ./WiggleIndexer/libs
+1) Download and build a version of javac supporting plugins (e.g. JDK 8, b114)
+2) gradle build in ./WiggleIndexer
+3) generated jar is available at ./WiggleIndexer/build/libs
 
 
 HOW TO USE
 ----------
 
-javac File.java -processorpath astPlugin.jar -XDplugin:Neo4jASTCompilerPlugin
+javac -cp build/libs/WiggleIndexer.jar:"/usr/share/neo4j/lib/*" -Xplugin:WiggleIndexerPlugin File.java
 
 three optional ENV variables to set up
 
-- projectName: name of the project to index (default: UNKNOWN_PROJECT]
-- dbPath: path where to locate neo4j database (default: ./neo4j-community-1.8.M06/data/graph.db2)
-- clearDB [yes/no]: erase existing database before indexing (default: no)
+- WIGGLE_PROJECT_NAME: name of the project to index (default: NO_NAME]
+- WIGGLE_DB_PATH: path where to locate neo4j database (default: ./neo4j/data/wiggle.db)
+- WIGGLE_CLEAR_DB [yes/no]: erase existing database before indexing (default: null)
 
 
 EXAMPLE QUERIES

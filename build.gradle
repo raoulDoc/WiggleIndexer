@@ -9,7 +9,7 @@ repositories {
    mavenCentral()
 }
 dependencies {
-   compile files('lib/classes.jar')
+   compile files("${System.properties['java.home']}/../lib/tools.jar")
    compile "org.neo4j:neo4j:${neo4jVersion}"
    compile group: 'org.neo4j', name: 'neo4j-kernel', version: '${neo4jVersion}', classifier:'tests'
    compile "junit:junit:${junitVersion}"

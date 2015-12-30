@@ -1,7 +1,10 @@
 BUILD INSTRUCTIONS
 ------------------
 
-Requirements: gradle 1.2 installed
+Requirements: 
+
+* JDK8
+* gradle 
 
 1. Download and build a version of javac supporting plugins (e.g. JDK 8, b114)
 2. gradle build in ./WiggleIndexer
@@ -11,14 +14,20 @@ Requirements: gradle 1.2 installed
 HOW TO USE
 ----------
 
-javac -cp build/libs/WiggleIndexer.jar:"/usr/share/neo4j/lib/*" -Xplugin:WiggleIndexerPlugin File.java
-
-three optional ENV variables to set up
+There are three optional ENV variables to set up
 
 - WIGGLE_PROJECT_NAME: name of the project to index (default: NO_NAME]
 - WIGGLE_DB_PATH: path where to locate neo4j database (default: ./neo4j/data/wiggle.db)
 - WIGGLE_CLEAR_DB [y/n]: erase existing database before indexing (default: n)
 
+```
+$ gradle build
+$ gradle copyDeps
+$ javac -cp build/libs/WiggleIndexer.jar:"build/libs/*" -Xplugin:WiggleIndexerPlugin samples/Test.java
+```
+
+By default the generated database is located under `./neo4j/data/wiggle.db`
+You can then select the full path using the Neo4j frontend to access the database.
 
 EXAMPLE QUERIES
 ---------------
